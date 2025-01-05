@@ -1,0 +1,45 @@
+Hata Raporu: POST /user endpoint mevcut bir kullanıcı oluştururken bir çakışma hatası döndürmüyor
+
+Ortam :
+Swagger URL: https://petstore.swagger.io/v2
+Test Aracı: Swagger UI / Postman
+
+1) Özet
+Mevcut bir ID ve kullanıcı adıyla yeni bir kullanıcı oluşturmaya çalışırken, API uygun bir hata kodu (örneğin 409 Conflict) döndürmedi. Bunun yerine, yeni kullanıcı bilgilerini
+bir önceki var olanın üzerine yazdı.
+
+2) Test Adımları
+1. Postman uygulaması açıldı.
+2. Aşağıdaki JSON body formatıyla POST isteği gönderildi.
+   {
+  "id": 2121,
+  "username": "test21",
+  "firstName": "Alitest",
+  "lastName": "test",
+  "email": "Alitest@denemetest.com",
+  "password": "sifre12.",
+  "phone": "+905555555556",
+  "userStatus": 1
+}
+3. Aynı şekilde kullanıcı bilgileri farklı ama ID ve kullanıcı adı aynı olan bir POST isteği daha gönderildi.
+{
+  "id": 2121,
+  "username": "test21",
+  "firstName": "Velitest",
+  "lastName": "test",
+  "email": "Velitest@denemetest.com",
+  "password": "sifre12.",
+  "phone": "+905555555521",
+  "userStatus": 1
+}
+
+Beklenen Davranış:
+API, aynı kimliğe veya kullanıcı adına sahip bir kullanıcının zaten var olduğunu belirten belirli bir hata kodu (409 gibi) döndürmelidir
+Mevcut Davranış:
+API sessizce mevcut kullanıcıyı geçersiz kılar ve herhangi bir çakışma belirtmeden 200 OK durumunu döndürür.
+Yanıt Detayı:
+{
+	"code": 200,
+	"type": "unknown",
+	"message": "2121"
+}
